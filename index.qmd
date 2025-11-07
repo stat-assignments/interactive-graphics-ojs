@@ -212,8 +212,8 @@ viewof family = Inputs.select(families, { label: "Hue family", value: "All" })
 
 // Current filtered options
 filtered3 = allColors.filter(d => {
-  const q = (query ?? "").trim().toLowerCase();
-  const name = (d.color ?? "").toLowerCase();
+  const q = ((query || "") + "").trim().toLowerCase();
+  const name = ((d.color || "") + "").toLowerCase()
   const nameMatch = q === "" || name.includes(q);
   const famMatch = family === "All" || d.family === family;
   return nameMatch && famMatch;
@@ -226,16 +226,15 @@ viewof toAdd = Inputs.select(filtered3, {
   format: d => `${d.color} (${d.hex})`
 })
 
-viewof add = Inputs.button("Add to My Palette")
-
 mutable palette = [];
 
 ```
 
 ```{ojs}
-// Handle clicks (Inputs.button value is a click count 0, 1, 2, ...)
+viewof add = Inputs.button("Add to My Palette", {value: 0, reduce: () => value + 1})
+
 if (add) {
-  const existing = new Set((palette ?? []).map(d => d.hex));
+  const existing = new Set((palette  []).map(d => d.hex));
   const merged   = [...(palette ?? [])];
 
   for (const c of (toAdd ?? [])) {
